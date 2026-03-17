@@ -1,0 +1,31 @@
+ALGORITMO: number guessing game
+------------------------------
+
+VARIABILI E TIPI:
+  - nb_list: array
+  - nb_to_guess: int
+  - total_nb: int
+  - attempts: int
+  - difficulty: str
+  - score: int
+  - play_again: str
+  - keep_going: bool
+
+COSTANTI:
+  - funzione number_list: chiede all'utente il livello di difficolta, 'easy': total_nb = 10 e attempts = 5 'hard': total_nb = 100 e attempts = 3  produce numeri grazie ad un ciclo total_nb di ciffre e gli mette in una lista, nb_list e dalla lista scegli il numero da indovinare, nb_to_guess. ritorna nb_to_guess, total_nb e attempts.
+  - funzione risult_control: prende due parametri, nb_to_guess, attempts, chiede al utente il numero e si occupa di controlla se il user_guess è uguale a nb_to_guess, se si aggiungi più uno a score e scrivi 'You got it! The answer was nb_to_guess' ritorna True, se non controlla se la risposta è superiore e scrivi 'Too high. Try again' o inferiore scrivi 'Too low. Try again'  e sostrae 1 ad attempts finche attempts è superiore a 0, se attempts uguale a 0 scrive 'Game Over. The answer was nb_to_guess' ritorna True 
+
+INIZIO:
+  scrivi("Welcome to the number guessing game")
+  score <--- 0
+  keep_going <--- True
+  	Finché keep_going
+		numb_to_guess,total_nb, attempts <--- funzione number_list
+		funzione risult_control(numb_to_guess, attempts)
+		scrivi("Your score: ", score)
+		scrivi("play again 'yes' or 'no'")
+		leggi(play_again)
+		Se play_again uguale a 'no'
+			scrivi('See You')
+			esci dal ciclo
+FINE
