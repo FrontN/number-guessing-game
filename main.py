@@ -49,9 +49,13 @@ def get_valid_input(prompt, valid_options):
 
 def get_game_settings():
     """
-    Clears the terminal screen and prompts the user to choose a difficulty.
-    Then it sets the total number of guesses and the number of attempts based on the difficulty.
-    Finally, it returns a random number between 1 and the total number, the total number, and the number of attempts.
+    Clears the terminal screen and asks the user to choose a difficulty.
+
+    Then it generates a random number between 1 and the total number of options
+    and returns it along with the total number of options and the number of attempts.
+
+    Returns:
+    tuple: A tuple containing the randomly generated number, the total number of options, and the number of attempts.
     """
     clear_screen()
     difficulty = get_valid_input("Choose a difficulty. Type 'easy' or 'hard': ", ['easy', 'hard'])
@@ -61,19 +65,21 @@ def get_game_settings():
 
 def play_round(target, max_range, attempts):
     """
-    Plays a round of the number guessing game.
-
-    Prompts the user for input and validates it against a list of valid options.
-    Then it sets the total number of guesses and the number of attempts based on the difficulty.
-    Finally, it returns a random number between 1 and the total number, the total number, and the number of attempts.
+    Clears the terminal screen and starts a round of number guessing.
+    Prints a message with the maximum range of numbers and waits for a second.
+    Then it enters a loop where it asks the user to guess a number between 1 and the maximum range.
+    If the user guesses a number outside the range, it prints an error message and waits for a second.
+    If the user guesses a number they have already tried, it prints an error message and waits for a second.
+    If the user guesses the correct number, it prints a success message and returns True.
+    If the user uses up all their attempts, it prints a failure message and returns False.
 
     Parameters:
-    target (int): The number to guess.
-    max_range (int): The highest number that can be guessed.
-    attempts (int): The number of attempts remaining to guess the number.
+    target (int): The correct answer to be guessed.
+    max_range (int): The maximum range of numbers to be guessed.
+    attempts (int): The number of attempts remaining.
 
     Returns:
-    bool: True if the user guessed the number, False otherwise.
+    bool: True if the user guesses the correct number, False if they use up all their attempts.
     """
     clear_screen()
     tried_number = set()
