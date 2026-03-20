@@ -3,6 +3,16 @@ import random
 import time
 import os
 
+TOTAL_NB ={
+    "easy": 10,
+    "hard": 100
+}
+
+ATTEMPTS = {
+    "easy": 5,
+    "hard": 3
+}
+
 def clear_screen():
     """Clear the terminal screen and print the logo.
     
@@ -17,82 +27,79 @@ def download():
         print(".", end="", flush=True)
         time.sleep(0.5)
 
-def get_game_settings():
-    """Choose a difficulty and return a random number between 1 and total_nb and the attempts remaining.
-    
-    Parameters
-    ----------
-    None
-    
-    Returns
-    -------
-    int
-        Random number between 1 and total_nb
-    int
-        Total number of attempts remaining
-    int
-        Number of attempts remaining
+def get_valid_input(prompt, valid_options):
+    """
+    Prompts the user for input and validates it against a list of valid options.
+
+    Parameters:
+    prompt (str): The message to display to the user when asking for input.
+    valid_options (list): A list of valid options that the user's input must match.
+
+    Returns:
+    str: The valid input entered by the user.
     """
     while True:
-        clear_screen()
-        difficulty = input("Choose a difficulty, type 'easy' or 'hard': ").lower()
-        if difficulty == 'easy':
-            total_nb = 10
-            attempts = 5
-            break
-
-        elif difficulty == 'hard':
-            total_nb = 100
-            attempts = 3
-            break
+        user_input = input(prompt).lower()
+        if user_input in valid_options:
+            return user_input
         else:
-            clear_screen()
-            print("Non valid option, try again")
+            print(f"Invalid input. Please enter one of the following: {', '.join(valid_options)}")
             time.sleep(1.5)
+            clear_screen()
+
+def get_game_settings():
+    """
+    Clears the terminal screen and prompts the user to choose a difficulty.
+    Then it sets the total number of guesses and the number of attempts based on the difficulty.
+    Finally, it returns a random number between 1 and the total number, the total number, and the number of attempts.
+    """
+    clear_screen()
+    difficulty = get_valid_input("Choose a difficulty. Type 'easy' or 'hard': ", ['easy', 'hard'])
+    total_nb = TOTAL_NB[difficulty]
+    attempts = ATTEMPTS[difficulty]
     return random.randint(1, total_nb), total_nb, attempts
 
 def play_round(target, max_range, attempts):
-    """Play a round of the number guessing game.
-    
-    Parameters
-    ----------
-    target : int
-        The number to guess
-    max_range : int
-        The maximum number that can be guessed
-    attempts : int
-        The number of attempts remaining
-    
-    Returns
-    -------
-    bool
-        True if the user guessed the number correctly, False if the user ran out of attempts
     """
+    Plays a round of the number guessing game.
+
+    Prompts the user for input and validates it against a list of valid options.
+    Then it sets the total number of guesses and the number of attempts based on the difficulty.
+    Finally, it returns a random number between 1 and the total number, the total number, and the number of attempts.
+
+    Parameters:
+    target (int): The number to guess.
+    max_range (int): The highest number that can be guessed.
+    attempts (int): The number of attempts remaining to guess the number.
+
+    Returns:
+    bool: True if the user guessed the number, False otherwise.
+    """
+    clear_screen()
     tried_number = set()
+    print(f"I'm thinking of a number between 1 and {max_range} ", end="")
+    download()
     while attempts > 0:
-        print(f"I'm thinking of a number between 1 and {max_range} ", end="")
-        download()
         try:
             clear_screen()
             if tried_number:
                 print(f"You've already tried: {sorted(list(tried_number))}")
             user_guess = int(input(f"You have {attempts} attempts remaining to guess the number. Make a guess: "))
         except ValueError:
-            clear_screen()
             print("Only numbers are allowed")
             time.sleep(1.5)
             continue
             
         if user_guess > max_range or user_guess < 1:
-            clear_screen()
             print(f"Out of range. please insert a number between 1 and {max_range}")
             time.sleep(1.5)
+            clear_screen()
             continue
 
         if user_guess in tried_number:
-            clear_screen()
             print(f"{user_guess}! You've already tried that number. Please try a different one.")
             time.sleep(1.5)
+            clear_screen()
             continue
 
         if user_guess == target:
@@ -100,14 +107,13 @@ def play_round(target, max_range, attempts):
             print(f"You got it! The answer was {target}")
             return True
         
-        clear_screen()
         attempts -= 1
         hint = "Too high" if user_guess > target else "Too low"
         if attempts > 0:
             print(f"{hint}. Try again")
             tried_number.add(user_guess)
             time.sleep(1.5)
-
+    clear_screen()
     print(f"Game Over. The right answer was {target}")
     return False
 
@@ -118,9 +124,9 @@ def main():
     and keeps track of the user's current streak.
     """
     score = 0
-    print(logo)
+    clear_screen()
     print("Welcome to the number guessing game")
-    time.sleep(2)
+    time.sleep(1.5)
     keep_going = True
 
     while keep_going:
@@ -132,8 +138,8 @@ def main():
             score = 0
 
         print(f"Your current Streak: {score}")
-        choice = input("Play again? (y/n): ").lower()
-        if not choice.startswith('y'):
+        choice = get_valid_input("Do you want to play again? Type 'y' or 'n': ", ['y', 'yes', 'no', 'n'])
+        if choice.startswith('n'):
             print("See You")
             break
 
